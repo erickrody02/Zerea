@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zeréa Jewelry — Catálogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #9C6C46;
+    --dark: #7A4F30;
+    --light: #E3BE97;
+    --cream: #FBF7EF;
+    --cream-deep: #F1E6D4;
+    --ink: #5C4632;
+    --danger: #a33;
+    --whatsapp: #25D366;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Jost', sans-serif;
+    background: var(--cream-deep);
+    color: var(--ink);
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--cream);
+    border-bottom: 1px solid var(--light);
+  }
+  .topbar {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand { display: flex; align-items: baseline; gap: 8px; }
+  .brand .script { font-family: 'Beau Rivage', cursive; font-size: 34px; color: var(--base); line-height: 1; }
+  .brand .tracked { font-size: 12px; letter-spacing: 3px; color: var(--base); }
+  .cart-btn {
+    position: relative;
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--light); background: transparent;
+    color: var(--dark); font-size: 14px; font-family: inherit; cursor: pointer;
+  }
+  .cart-badge {
+    position: absolute; top: -6px; right: -6px;
+    background: var(--base); color: #fff;
+    font-size: 11px; width: 20px; height: 20px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  main.container { max-width: 1000px; margin: 0 auto; padding: 24px 16px 60px; }
+  .state-msg { text-align: center; padding: 60px 0; color: var(--dark); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #fff; border: 1px solid var(--light); border-radius: 16px;
+    overflow: hidden; display: flex; flex-direction: column;
+  }
+  .card .photo { aspect-ratio: 1/1; background: var(--cream-deep); }
+  .card .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card .body { padding: 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card .name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .card .desc { font-size: 12px; color: var(--dark); opacity: 0.85; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card .price { font-size: 14px; color: var(--base); }
+  .card .actions { margin-top: auto; }
+  .btn {
+    font-family: inherit; font-size: 14px; padding: 9px 14px;
+    border-radius: 999px; border: 1px solid var(--base); background: transparent;
+    color: var(--dark); cursor: pointer; width: 100%;
+  }
+  .btn.primary { background: var(--base); color: #fff; border: none; }
+  .btn.whatsapp { background: var(--whatsapp); color: #fff; border: none; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .stepper {
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--base); border-radius: 999px; padding: 4px 10px;
+  }
+  .stepper button { background: none; border: none; color: var(--dark); cursor: pointer; padding: 2px; }
+  .remove-link {
+    font-size: 12px; color: var(--danger); background: none; border: none;
+    cursor: pointer; display: flex; align-items: center; gap: 4px; justify-content: center; margin-top: 4px;
+    font-family: inherit;
+  }
+  .admin-toggle-wrap { margin-top: 40px; border-top: 1px solid var(--light); padding-top: 20px; }
+  .link-btn {
+    font-size: 14px; color: var(--dark); background: none; border: none;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: inherit; padding: 0;
+  }
+  .admin-box {
+    margin-top: 12px; background: var(--cream); border: 1px solid var(--light);
+    border-radius: 16px; padding: 16px; max-width: 380px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .admin-box input {
+    font-family: inherit; font-size: 14px; padding: 9px 12px;
+    border-radius: 10px; border: 1px solid var(--light); width: 100%;
+  }
+  .admin-title { font-size: 14px; font-weight: 500; margin: 0; }
+  .upload-label {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: 1px solid var(--light); border-radius: 10px; padding: 12px;
+    font-size: 14px; color: var(--dark); cursor: pointer;
+  }
+  .preview-img { width: 90px; height: 90px; object-fit: cover; border-radius: 10px; align-self: center; }
+  .error { font-size: 12px; color: var(--danger); margin: 0; }
+  .row { display: flex; gap: 8px; }
+  .cart-overlay {
+    position: fixed; inset: 0; z-index: 30;
+    background: rgba(60,40,20,0.35);
+    display: flex; justify-content: flex-end;
+  }
+  .cart-panel {
+    width: 100%; max-width: 380px; height: 100%;
+    background: var(--cream); display: flex; flex-direction: column;
+  }
+  .cart-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid var(--light); font-weight: 500;
+  }
+  .icon-btn { background: none; border: none; color: var(--dark); cursor: pointer; font-size: 18px; }
+  .cart-items { flex: 1; overflow-y: auto; padding: 8px 16px; }
+  .cart-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid var(--light);
+  }
+  .cart-item img { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; }
+  .cart-item .info { flex: 1; }
+  .cart-item .info .n { font-size: 14px; }
+  .cart-item .info .p { font-size: 12px; color: var(--base); }
+  .cart-item button { background: none; border: none; color: var(--danger); cursor: pointer; }
+  .cart-footer { padding: 14px 16px; border-top: 1px solid var(--light); }
+  .cart-total-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
+  .empty-cart { text-align: center; margin-top: 40px; color: var(--dark); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand"><span class="script">Zeréa</span><span class="tracked">JEWELRY</span></div>
+    <button class="cart-btn" id="cartBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span>Carrito</span>
+      <span class="cart-badge" id="cartBadge" hidden>0</span>
+    </button>
+  </div>
+</header>
+
+<main class="container">
+  <div class="state-msg" id="loadingMsg">Cargando catálogo...</div>
+  <div class="state-msg" id="emptyMsg" hidden>
+    Aún no hay productos en el catálogo.<br>
+    <small>Usa "Agregar producto" abajo, o súbelos directamente en Supabase.</small>
+  </div>
+  <div class="grid" id="grid"></div>
+
+  <div class="admin-toggle-wrap">
+    <button class="link-btn" id="adminToggleBtn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      ¿Eres la tienda? Agregar producto
+    </button>
+  </div>
+
+  <div class="admin-box" id="passGate" hidden>
+    <p style="margin:0;font-size:14px;">Ingresa la contraseña de administrador:</p>
+    <div class="row">
+      <input type="password" id="passInput" placeholder="Contraseña">
+      <button class="btn primary" style="width:auto;" id="passBtn">Entrar</button>
+    </div>
+    <p class="error" id="passError" hidden></p>
+  </div>
+
+  <div class="admin-box" id="adminForm" hidden>
+    <p class="admin-title">Agregar nuevo producto</p>
+    <input type="text" id="prodName" placeholder="Nombre del artículo">
+    <textarea id="prodDesc" placeholder="Descripción" rows="2" style="font-family:inherit;font-size:14px;padding:9px 12px;border-radius:10px;border:1px solid var(--light);width:100%;resize:vertical;"></textarea>
+    <input type="number" id="prodPrice" placeholder="Precio (MXN)">
+    <label class="upload-label">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 8 5-5 5 5"/><path d="M5 21h14"/></svg>
+      <span id="uploadLabelText">Subir foto</span>
+      <input type="file" id="prodFile" accept="image/*" hidden>
+    </label>
+    <img id="prodPreview" class="preview-img" hidden>
+    <p class="error" id="formError" hidden></p>
+    <button class="btn primary" id="saveProdBtn">Guardar producto</button>
+    <button class="link-btn" style="color:var(--danger);" id="clearCatalogBtn">Vaciar todo el catálogo</button>
+  </div>
+</main>
+
+<div class="cart-overlay" id="cartOverlay" hidden>
+  <div class="cart-panel">
+    <div class="cart-head">
+      <span>Tu pedido</span>
+      <button class="icon-btn" id="closeCartBtn">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer">
+      <div class="cart-total-row"><span>Total</span><span id="cartTotal">$0 MXN</span></div>
+      <button class="btn whatsapp" id="sendOrderBtn">Enviar pedido por WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+/* ============ CONFIGURATION — edit this block ============ */
+const SUPABASE_URL = 'https://bpxgrxfhwjlxgnebzzkz.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_-d8gEl0tFXMXxWILKUZdqg_WQ9zQOIb';
+const READ_TABLE = 'articulos_publico';   // safe public view (see setup.sql) — never the raw table
+const WRITE_TABLE = 'articulos';          // real table the admin form inserts/deletes from
+const COLS = { id: 'id', name: 'nombre', description: 'descripcion', price: 'precio_venta', image: 'foto_url' };
+const STORAGE_BUCKET = 'product-images';             // storage bucket for uploaded photos
+const STORE_PHONE = '526271494917';                  // WhatsApp number, country code + number, no + or spaces
+const ADMIN_PASSCODE = 'ZEREA2026';                  // basic client-side gate, not real auth
+/* =========================================================== */
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let products = [];
+let cart = {};
+
+const el = (id) => document.getElementById(id);
+const grid = el('grid');
+const loadingMsg = el('loadingMsg');
+const emptyMsg = el('emptyMsg');
+
+function formatPrice(n) {
+  const num = Number(n) || 0;
+  return '$' + num.toLocaleString('es-MX', { maximumFractionDigits: 0 }) + ' MXN';
+}
+
+async function loadProducts() {
+  loadingMsg.hidden = false;
+  emptyMsg.hidden = true;
+  const { data, error } = await supabase
+    .from(READ_TABLE)
+    .select(`${COLS.id}, ${COLS.name}, ${COLS.description}, ${COLS.image}, ${COLS.price}`);
+  loadingMsg.hidden = true;
+  if (error) {
+    console.error(error);
+    products = [];
+  } else {
+    products = data || [];
+  }
+  renderProducts();
+}
+
+function renderProducts() {
+  grid.innerHTML = '';
+  if (products.length === 0) {
+    emptyMsg.hidden = false;
+    return;
+  }
+  emptyMsg.hidden = true;
+  products.forEach((p) => {
+    const id = p[COLS.id];
+    const qty = cart[id] || 0;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="photo"><img src="${p[COLS.image] || ''}" alt="${p[COLS.name]}"></div>
+      <div class="body">
+        <div class="name">${p[COLS.name]}</div>
+        ${p[COLS.description] ? `<div class="desc">${p[COLS.description]}</div>` : ''}
+        <div class="price">${formatPrice(p[COLS.price])}</div>
+        <div class="actions" data-actions></div>
+        ${adminUnlocked ? `<button class="remove-link" data-remove="${id}">Quitar del catálogo</button>` : ''}
+      </div>
+    `;
+    const actions = card.querySelector('[data-actions]');
+    actions.innerHTML = qty === 0
+      ? `<button class="btn" data-add="${id}">Agregar</button>`
+      : `<div class="stepper">
+           <button data-dec="${id}">−</button>
+           <span>${qty}</span>
+           <button data-inc="${id}">+</button>
+         </div>`;
+    grid.appendChild(card);
+  });
+}
+
+grid.addEventListener('click', (e) => {
+  const add = e.target.closest('[data-add]');
+  const inc = e.target.closest('[data-inc]');
+  const dec = e.target.closest('[data-dec]');
+  const rem = e.target.closest('[data-remove]');
+  if (add) { addToCart(add.dataset.add); }
+  if (inc) { addToCart(inc.dataset.inc); }
+  if (dec) { decFromCart(dec.dataset.dec); }
+  if (rem) { removeProduct(rem.dataset.remove); }
+});
+
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  renderProducts();
+  updateCartBadge();
+}
+function decFromCart(id) {
+  const q = (cart[id] || 0) - 1;
+  if (q <= 0) delete cart[id]; else cart[id] = q;
+  renderProducts();
+  updateCartBadge();
+  renderCart();
+}
+function removeFromCart(id) {
+  delete cart[id];
+  renderProducts();
+  updateCartBadge();
+  renderCart();
+}
+
+function getCartItems() {
+  return Object.entries(cart).map(([id, qty]) => {
+    const p = products.find((p) => String(p[COLS.id]) === String(id));
+    return p ? { id, qty, name: p[COLS.name], price: p[COLS.price], image: p[COLS.image] } : null;
+  }).filter(Boolean);
+}
+
+function updateCartBadge() {
+  const badge = el('cartBadge');
+  const count = Object.values(cart).reduce((s, q) => s + q, 0);
+  badge.textContent = count;
+  badge.hidden = count === 0;
+}
+
+function renderCart() {
+  const items = getCartItems();
+  const wrap = el('cartItems');
+  if (items.length === 0) {
+    wrap.innerHTML = '<div class="empty-cart">Tu carrito está vacío.</div>';
+  } else {
+    wrap.innerHTML = items.map((i) => `
+      <div class="cart-item">
+        <img src="${i.image || ''}" alt="${i.name}">
+        <div class="info">
+          <div class="n">${i.name}</div>
+          <div class="p">${i.qty} x ${formatPrice(i.price)}</div>
+        </div>
+        <button data-cart-remove="${i.id}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        </button>
+      </div>
+    `).join('');
+  }
+  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  el('cartTotal').textContent = formatPrice(total);
+  el('sendOrderBtn').disabled = items.length === 0;
+}
+
+el('cartItems').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-cart-remove]');
+  if (btn) removeFromCart(btn.dataset.cartRemove);
+});
+
+el('cartBtn').addEventListener('click', () => { el('cartOverlay').hidden = false; renderCart(); });
+el('closeCartBtn').addEventListener('click', () => { el('cartOverlay').hidden = true; });
+el('cartOverlay').addEventListener('click', (e) => { if (e.target.id === 'cartOverlay') el('cartOverlay').hidden = true; });
+
+el('sendOrderBtn').addEventListener('click', () => {
+  const items = getCartItems();
+  if (items.length === 0) return;
+  const lines = ['Hola, quiero hacer un pedido de Zeréa Jewelry:', ''];
+  items.forEach((i) => lines.push(`• ${i.name} x${i.qty} — ${formatPrice(i.price * i.qty)}`));
+  const total = items.reduce((s, i) => s + i.price * i.qty, 0);
+  lines.push('', `Total: ${formatPrice(total)}`);
+  const url = `https://wa.me/${STORE_PHONE}?text=${encodeURIComponent(lines.join('\n'))}`;
+  window.open(url, '_blank');
+});
+
+/* ---------- Admin: passcode gate + add/remove products ---------- */
+let adminUnlocked = false;
+
+el('adminToggleBtn').addEventListener('click', () => {
+  el('passGate').hidden = false;
+  el('adminToggleBtn').parentElement.hidden = true;
+});
+
+el('passBtn').addEventListener('click', () => {
+  if (el('passInput').value === ADMIN_PASSCODE) {
+    adminUnlocked = true;
+    el('passGate').hidden = true;
+    el('adminForm').hidden = false;
+    renderProducts();
+  } else {
+    el('passError').hidden = false;
+    el('passError').textContent = 'Contraseña incorrecta.';
+  }
+});
+
+let pendingImageBlob = null;
+
+el('prodFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  el('uploadLabelText').textContent = 'Procesando foto...';
+  pendingImageBlob = await resizeImage(file);
+  el('prodPreview').src = URL.createObjectURL(pendingImageBlob);
+  el('prodPreview').hidden = false;
+  el('uploadLabelText').textContent = 'Cambiar foto';
+});
+
+function resizeImage(file, maxW = 900, quality = 0.75) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxW / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob) => resolve(blob), 'image/jpeg', quality);
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+el('saveProdBtn').addEventListener('click', async () => {
+  const name = el('prodName').value.trim();
+  const price = Number(el('prodPrice').value);
+  const errorEl = el('formError');
+  errorEl.hidden = true;
+
+  if (!name || !price || price <= 0 || !pendingImageBlob) {
+    errorEl.textContent = 'Agrega nombre, precio y una foto antes de guardar.';
+    errorEl.hidden = false;
+    return;
+  }
+
+  el('saveProdBtn').disabled = true;
+  el('saveProdBtn').textContent = 'Guardando...';
+
+  try {
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+    const { error: upErr } = await supabase.storage.from(STORAGE_BUCKET).upload(path, pendingImageBlob, { contentType: 'image/jpeg' });
+    if (upErr) throw upErr;
+    const { data: pub } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+
+    const row = {};
+    row[COLS.name] = name;
+    row[COLS.description] = el('prodDesc').value.trim();
+    row[COLS.price] = price;
+    row[COLS.image] = pub.publicUrl;
+
+    const { error: insErr } = await supabase.from(WRITE_TABLE).insert([row]);
+    if (insErr) throw insErr;
+
+    el('prodName').value = '';
+    el('prodDesc').value = '';
+    el('prodPrice').value = '';
+    el('prodPreview').hidden = true;
+    el('prodFile').value = '';
+    pendingImageBlob = null;
+    el('uploadLabelText').textContent = 'Subir foto';
+    await loadProducts();
+  } catch (err) {
+    console.error(err);
+    errorEl.textContent = 'No se pudo guardar. Revisa la consola para más detalles.';
+    errorEl.hidden = false;
+  }
+  el('saveProdBtn').disabled = false;
+  el('saveProdBtn').textContent = 'Guardar producto';
+});
+
+async function removeProduct(id) {
+  const { error } = await supabase.from(WRITE_TABLE).delete().eq(COLS.id, id);
+  if (!error) await loadProducts();
+}
+
+el('clearCatalogBtn').addEventListener('click', async () => {
+  if (!confirm('¿Seguro que quieres borrar todo el catálogo? Esta acción no se puede deshacer.')) return;
+  const ids = products.map((p) => p[COLS.id]);
+  if (ids.length === 0) return;
+  await supabase.from(WRITE_TABLE).delete().in(COLS.id, ids);
+  await loadProducts();
+});
+
+loadProducts();
+</script>
+</body>
+</html>
