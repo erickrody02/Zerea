@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catálogo · Atelier</title>
+<title>Catálogo · Zerea</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -180,7 +180,7 @@
 <div id="toast-container"></div>
 
 <header class="shop-header">
-  <div class="brand-word">Atelier</div>
+  <div class="brand-word">Zerea</div>
   <div class="brand-sub">Joyería · Ropa · Eventos</div>
   <input type="text" id="search-input" placeholder="Buscar en el catálogo…">
 </header>
@@ -234,8 +234,8 @@
    CONFIGURACIÓN — reemplaza con los datos de tu proyecto Supabase
    y el número de WhatsApp que recibirá los pedidos.
    ===================================================================== */
-const SUPABASE_URL = 'TU_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'TU_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://bpxgrxfhwjlxgnebzzkz.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_-d8gEl0tFXMXxWILKUZdqg_WQ9zQOIb';
 
 // Formato para México: 52 + 1 + número a 10 dígitos (WhatsApp todavía pide
 // el "1" para números mexicanos aunque ya no se use para llamadas/SMS).
@@ -439,7 +439,7 @@ $('#btn-enviar-pedido').addEventListener('click', () => {
   const total = cart.reduce((s, i) => s + i.cantidad * i.precio_venta, 0);
 
   const lines = [];
-  lines.push('🛍️ *Nuevo pedido — Atelier*');
+  lines.push('🛍️ *Nuevo pedido — Zerea*');
   lines.push('');
   lines.push('Cliente: ' + nombre);
   if (telefono) lines.push('Teléfono: ' + telefono);
