@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zerea · Punto de Venta</title>
+<title>Atelier · Punto de Venta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -196,6 +196,11 @@
   #tabla-carrito td, #tabla-carrito th{ font-size:12.5px; }
   #carrito-total{ display:flex; justify-content:space-between; align-items:baseline; padding:14px 4px 4px; font-size:15px; font-weight:600; }
   #carrito-total .num{ font-size:22px; color:var(--plum); }
+  #edit-carrito-total{ display:flex; justify-content:space-between; align-items:baseline; padding:14px 4px 4px; font-size:15px; font-weight:600; }
+  #edit-carrito-total .num{ font-size:22px; color:var(--plum); }
+  .evento-subrow td{ background:var(--line-soft); padding:12px 10px 14px; }
+  .evento-subrow .row{ margin-bottom:10px; }
+  .evento-subrow .field{ margin-bottom:0; }
   .pago-toggle{ display:flex; gap:10px; margin-bottom:12px; }
   .pago-toggle label{
     flex:1; border:1px solid var(--line); border-radius:8px; padding:10px 12px; text-align:center;
@@ -280,15 +285,15 @@
   }
 
   /* ---------- Impresión ---------- */
-  #print-header{ display:none; }
+  #print-header, #print-header-cuenta{ display:none; }
   @media print{
     body *{ visibility:hidden; }
-    #tab-reporte, #tab-reporte *{ visibility:visible; }
-    #tab-reporte{ position:absolute; left:0; top:0; width:100%; }
-    #tab-reporte .no-print{ display:none !important; }
-    #print-header{ display:block; margin-bottom:18px; }
-    #print-header .brand-word{ font-size:22px; color:var(--plum); }
-    #print-header .meta{ font-size:12px; color:#555; margin-top:4px; }
+    .printable-panel, .printable-panel *{ visibility:visible; }
+    .printable-panel{ position:absolute; left:0; top:0; width:100%; }
+    .printable-panel .no-print{ display:none !important; }
+    #print-header, #print-header-cuenta{ display:block; margin-bottom:18px; }
+    #print-header .brand-word, #print-header-cuenta .brand-word{ font-size:22px; color:var(--plum); }
+    #print-header .meta, #print-header-cuenta .meta{ font-size:12px; color:#555; margin-top:4px; }
   }
 </style>
 </head>
@@ -302,7 +307,7 @@
 <div id="login-screen">
   <div class="login-card">
     <div class="login-brand">
-      <div class="brand-word">Zerea</div>
+      <div class="brand-word">Atelier</div>
       <div class="brand-sub">Punto de venta</div>
     </div>
     <div id="login-error" class="hidden"></div>
@@ -330,14 +335,14 @@
     <button type="button" id="btn-menu-toggle" aria-label="Abrir menú">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <span class="brand-word">Zerea</span>
+    <span class="brand-word">Atelier</span>
     <span class="page-title-mobile" id="page-title-mobile"></span>
   </div>
   <div id="sidebar-backdrop"></div>
 
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-word">Zerea</div>
+      <div class="brand-word">Atelier</div>
       <div class="brand-sub">Punto de venta</div>
     </div>
 
@@ -345,8 +350,10 @@
       <button class="nav-btn" data-tab="articulo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M5 8h14M5 8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2M7 8v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8"/></svg>Registrar artículo</button>
       <button class="nav-btn" data-tab="inventario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Inventario</button>
       <button class="nav-btn" data-tab="venta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2A2 2 0 0 0 9.35 17H17a2 2 0 0 0 1.95-1.57L21 8H6"/></svg>Registrar venta</button>
+      <button class="nav-btn" data-tab="editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Editar ventas</button>
       <button class="nav-btn" data-tab="calendario"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendario de servicios</button>
       <button class="nav-btn" data-tab="creditos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v20M17 6.5c0-1.9-2.2-3.5-5-3.5s-5 1.4-5 3.2c0 3.8 10 1.8 10 5.9 0 1.9-2.2 3.4-5 3.4s-5-1.5-5-3.4"/></svg>Cobros de crédito</button>
+      <button class="nav-btn" data-tab="cuenta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5M9 13h6M9 17h6M9 9h2"/></svg>Estados de cuenta</button>
       <button class="nav-btn" data-tab="reporte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V5M4 19h16M8 16v-4M12.5 16V8M17 16v-7"/></svg>Reporte de ventas</button>
       <button class="nav-btn" data-tab="gastos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Gastos de servicios</button>
       <button class="nav-btn" data-tab="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.2c1.7.4 3 2 3 3.8s-1.3 3.4-3 3.8M19 14.3c1.8.6 3 2.2 3 4.2"/></svg>Clientes y proveedores</button>
@@ -569,6 +576,104 @@
     </section>
 
     <!-- ============================================================ -->
+    <!-- TAB: Editar ventas -->
+    <!-- ============================================================ -->
+    <section id="tab-editar" class="panel hidden">
+      <div class="panel-grid two">
+        <div class="card">
+          <h2 class="section-title">Buscar venta</h2>
+          <div class="row" style="align-items:flex-end;">
+            <div class="field">
+              <label for="edit-filtro-cliente">Cliente</label>
+              <select id="edit-filtro-cliente"><option value="">Todos</option></select>
+            </div>
+            <div class="field" style="max-width:130px;">
+              <label for="edit-filtro-folio">Folio</label>
+              <input type="text" id="edit-filtro-folio" placeholder="Ej. 12">
+            </div>
+            <div class="field" style="max-width:120px;">
+              <button type="button" class="btn btn-secondary" id="btn-filtrar-ventas-lista" style="margin-bottom:1px;">Buscar</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Folio</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Pago</th><th>Estatus</th><th></th></tr></thead>
+              <tbody id="tbody-ventas-lista"><tr class="empty-row"><td colspan="7">Selecciona esta pestaña para cargar las ventas recientes</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card hidden" id="edit-venta-panel">
+          <h2 class="section-title">Editar venta <span id="edit-venta-folio"></span></h2>
+          <div class="row">
+            <div class="field">
+              <label for="edit-cliente">Cliente *</label>
+              <select id="edit-cliente"></select>
+            </div>
+            <div class="field">
+              <label for="edit-fecha">Fecha *</label>
+              <input type="date" id="edit-fecha">
+            </div>
+          </div>
+          <div class="field">
+            <label>Tipo de pago</label>
+            <div class="pago-toggle">
+              <label id="edit-lbl-contado"><input type="radio" name="edit-tipo-pago" value="contado"><span>Contado</span></label>
+              <label id="edit-lbl-credito"><input type="radio" name="edit-tipo-pago" value="credito"><span>Crédito</span></label>
+            </div>
+            <span class="hint hidden" id="edit-pago-bloqueado-nota">Esta venta ya tiene abonos registrados, así que no se puede cambiar el tipo de pago.</span>
+          </div>
+          <div class="field" id="edit-forma-pago-wrap">
+            <label for="edit-forma-pago">Forma de pago</label>
+            <select id="edit-forma-pago">
+              <option value="efectivo">Efectivo</option>
+              <option value="banco">Cuenta bancaria</option>
+            </select>
+          </div>
+
+          <h2 class="section-title" style="margin-top:16px;">Artículos de la venta</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Artículo</th><th>Cant.</th><th>P. unit.</th><th>Subtotal</th><th></th></tr></thead>
+              <tbody id="tbody-editar-carrito"></tbody>
+            </table>
+          </div>
+          <div id="edit-carrito-total"><span>Total</span><span class="num" id="edit-total-num">$0.00</span></div>
+
+          <h2 class="section-title" style="margin-top:16px;">Agregar otro artículo</h2>
+          <div class="row">
+            <div class="field">
+              <label for="edit-add-categoria">Categoría</label>
+              <select id="edit-add-categoria"><option value="">Selecciona…</option></select>
+            </div>
+            <div class="field">
+              <label for="edit-add-articulo">Artículo</label>
+              <select id="edit-add-articulo" disabled><option value="">Elige categoría primero</option></select>
+            </div>
+          </div>
+          <div class="field" style="max-width:160px;">
+            <label for="edit-add-cantidad">Cantidad</label>
+            <input type="number" id="edit-add-cantidad" min="1" step="any" value="1">
+          </div>
+          <div id="edit-add-evento-fields" class="hidden">
+            <div class="row">
+              <div class="field"><label for="edit-add-fecha-evento">Fecha del evento</label><input type="date" id="edit-add-fecha-evento"></div>
+              <div class="field"><label for="edit-add-hora-evento">Hora</label><input type="time" id="edit-add-hora-evento"></div>
+            </div>
+            <div class="field"><label for="edit-add-lugar-evento">Lugar</label><input type="text" id="edit-add-lugar-evento"></div>
+            <div class="field"><label for="edit-add-notas-evento">Notas</label><textarea id="edit-add-notas-evento"></textarea></div>
+          </div>
+          <button type="button" class="btn btn-gold" id="btn-editar-agregar-articulo">+ Agregar a la venta</button>
+
+          <div style="display:flex; gap:10px; margin-top:20px;">
+            <button type="button" class="btn btn-primary" id="btn-guardar-edicion-venta">Guardar cambios</button>
+            <button type="button" class="btn btn-secondary" id="btn-cancelar-edicion-venta">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
     <!-- TAB: Calendario de servicios -->
     <!-- ============================================================ -->
     <section id="tab-calendario" class="panel hidden">
@@ -635,9 +740,57 @@
     </section>
 
     <!-- ============================================================ -->
+    <!-- TAB: Estados de cuenta -->
+    <!-- ============================================================ -->
+    <section id="tab-cuenta" class="panel hidden printable-panel">
+      <div class="card no-print" style="margin-bottom:18px;">
+        <div class="field" style="max-width:320px;">
+          <label for="cuenta-cliente">Cliente</label>
+          <select id="cuenta-cliente"><option value="">Selecciona un cliente</option></select>
+        </div>
+      </div>
+
+      <div id="cuenta-contenido" class="hidden">
+        <div class="card" style="margin-bottom:18px;">
+          <div id="print-header-cuenta">
+            <div class="brand-word">Atelier</div>
+            <div class="meta" id="print-meta-cuenta"></div>
+          </div>
+          <div class="row no-print" style="justify-content:space-between; align-items:center; margin-bottom:0;">
+            <h2 class="section-title" style="margin:0;" id="cuenta-nombre-titulo"></h2>
+            <button class="btn btn-gold btn-small" id="btn-imprimir-cuenta">Imprimir estado de cuenta</button>
+          </div>
+          <div class="inv-summary" id="cuenta-resumen" style="margin-top:14px;"></div>
+          <div id="cuenta-contacto" style="font-size:12.5px; color:#7c7060; margin-top:8px;"></div>
+          <button class="btn btn-secondary btn-small no-print hidden" id="btn-ir-a-cobrar" style="margin-top:12px;">Registrar un pago de este cliente</button>
+        </div>
+
+        <div class="card" style="margin-bottom:18px;">
+          <h2 class="section-title">Artículos y servicios comprados</h2>
+          <div class="table-wrap">
+            <table class="table-wide">
+              <thead><tr><th>Folio</th><th>Fecha</th><th>Artículo</th><th>Categoría</th><th>Cant.</th><th>P. unit.</th><th>Subtotal</th><th>Pago</th><th>Estatus</th></tr></thead>
+              <tbody id="tbody-cuenta-compras"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">Pagos recibidos</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Fecha</th><th>Folio</th><th>Monto</th><th>Forma de pago</th></tr></thead>
+              <tbody id="tbody-cuenta-pagos"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
     <!-- TAB: Reporte de ventas -->
     <!-- ============================================================ -->
-    <section id="tab-reporte" class="panel hidden">
+    <section id="tab-reporte" class="panel hidden printable-panel">
       <div class="card no-print" style="margin-bottom:18px;">
         <div class="row" style="align-items:flex-end;">
           <div class="field"><label for="rep-fecha-inicio">Desde</label><input type="date" id="rep-fecha-inicio"></div>
@@ -656,7 +809,7 @@
 
       <div class="card">
         <div id="print-header">
-          <div class="brand-word">Zerea</div>
+          <div class="brand-word">Atelier</div>
           <div class="meta" id="print-meta"></div>
         </div>
         <div class="inv-summary" id="reporte-totales"></div>
@@ -795,6 +948,8 @@ const state = {
   creditosCliente: [],
   ventaSeleccionadaPago: null,
   servicioSeleccionadoId: null,
+  editingVentaId: null,
+  editCart: [],
 };
 
 /* =====================================================================
@@ -855,8 +1010,10 @@ const TAB_TITLES = {
   articulo: 'Registrar artículo',
   inventario: 'Inventario',
   venta: 'Registrar venta',
+  editar: 'Editar ventas',
   calendario: 'Calendario de servicios',
   creditos: 'Cobros de crédito',
+  cuenta: 'Estados de cuenta',
   reporte: 'Reporte de ventas',
   gastos: 'Gastos de servicios',
   clientes: 'Clientes y proveedores',
@@ -871,8 +1028,17 @@ function showTab(tab) {
 
   if (tab === 'inventario') loadInventario();
   if (tab === 'venta') refreshVentaSelects();
+  if (tab === 'editar') {
+    populateSelect($('#edit-filtro-cliente'), state.clientes, { placeholder: 'Todos' });
+    cancelarEdicionVenta();
+    loadVentasLista();
+  }
   if (tab === 'calendario') renderCalendar();
   if (tab === 'creditos') populateSelect($('#cred-cliente'), state.clientes, { placeholder: 'Selecciona un cliente' });
+  if (tab === 'cuenta') {
+    populateSelect($('#cuenta-cliente'), state.clientes, { placeholder: 'Selecciona un cliente' });
+    $('#cuenta-contenido').classList.add('hidden');
+  }
   if (tab === 'reporte') populateSelect($('#rep-cliente'), state.clientes, { placeholder: 'Todos' });
   if (tab === 'gastos') loadServiciosVendidos();
   if (tab === 'clientes') { renderClientesTable(); renderProveedoresTable(); }
@@ -1311,6 +1477,264 @@ $('#btn-registrar-venta').addEventListener('click', async () => {
 });
 
 /* =====================================================================
+   TAB: EDITAR VENTAS
+   ===================================================================== */
+$('#btn-filtrar-ventas-lista').addEventListener('click', loadVentasLista);
+$('#edit-filtro-cliente').addEventListener('change', loadVentasLista);
+
+async function loadVentasLista() {
+  const tbody = $('#tbody-ventas-lista');
+  tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Cargando…</td></tr>';
+  let q = sb.from('ventas').select('*, clientes(nombre)').order('fecha', { ascending: false }).order('folio', { ascending: false }).limit(80);
+  const clienteId = $('#edit-filtro-cliente').value;
+  const folio = $('#edit-filtro-folio').value.trim();
+  if (clienteId) q = q.eq('cliente_id', clienteId);
+  if (folio) q = q.eq('folio', Number(folio) || -1);
+  const { data, error } = await q;
+  if (error) { tbody.innerHTML = '<tr class="empty-row"><td colspan="7">Error al cargar ventas</td></tr>'; return; }
+  if (!data.length) { tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No se encontraron ventas</td></tr>'; return; }
+
+  const estatusBadge = (v) => {
+    if (v.tipo_pago === 'contado') return '<span class="badge badge-ok">Completada</span>';
+    if (v.estatus === 'pagada') return '<span class="badge badge-ok">Pagada</span>';
+    if (v.estatus === 'cancelada') return '<span class="badge badge-neutral">Cancelada</span>';
+    return '<span class="badge badge-warn">Pendiente</span>';
+  };
+  tbody.innerHTML = data.map(v => `
+    <tr>
+      <td class="num">#${v.folio}</td>
+      <td>${fmtDate(v.fecha)}</td>
+      <td>${escapeHtml(v.clientes ? v.clientes.nombre : '—')}</td>
+      <td class="num">${fmtMoney(v.total)}</td>
+      <td>${v.tipo_pago === 'credito' ? 'Crédito' : 'Contado'}</td>
+      <td>${estatusBadge(v)}</td>
+      <td><button class="btn btn-secondary btn-small" data-editar-venta="${v.id}">Editar</button></td>
+    </tr>`).join('');
+}
+
+$('#tbody-ventas-lista').addEventListener('click', (e) => {
+  const id = e.target.dataset.editarVenta;
+  if (id) loadVentaParaEditar(id);
+});
+
+async function loadVentaParaEditar(ventaId) {
+  const { data: venta, error: e1 } = await sb.from('ventas').select('*').eq('id', ventaId).single();
+  if (e1) { toast('No se pudo cargar la venta: ' + e1.message, 'error'); return; }
+  const { data: detalle, error: e2 } = await sb.from('venta_detalle')
+    .select('*, articulos(nombre, categorias(nombre, tipo))').eq('venta_id', ventaId).order('created_at');
+  if (e2) { toast('No se pudo cargar el detalle: ' + e2.message, 'error'); return; }
+  const { data: pagos } = await sb.from('pagos_credito').select('monto').eq('venta_id', ventaId);
+  const totalPagado = (pagos || []).reduce((s, p) => s + Number(p.monto), 0);
+
+  state.editingVentaId = ventaId;
+  state.editVentaTotalPagado = totalPagado;
+  state.editCart = detalle.map(d => ({
+    detalle_id: d.id,
+    articulo_id: d.articulo_id,
+    nombre: d.articulos ? d.articulos.nombre : '(artículo eliminado)',
+    categoria: d.articulos && d.articulos.categorias ? d.articulos.categorias.nombre : '',
+    categoria_tipo: d.articulos && d.articulos.categorias ? d.articulos.categorias.tipo : 'producto',
+    cantidad: Number(d.cantidad),
+    precio_unitario: Number(d.precio_unitario),
+    fecha_evento: d.fecha_evento || '',
+    hora_evento: d.hora_evento || '',
+    lugar_evento: d.lugar_evento || '',
+    notas_evento: d.notas_evento || '',
+  }));
+
+  $('#edit-venta-folio').textContent = '#' + venta.folio;
+  populateSelect($('#edit-cliente'), state.clientes, {});
+  $('#edit-cliente').value = venta.cliente_id || '';
+  $('#edit-fecha').value = venta.fecha;
+  const radio = $(`input[name="edit-tipo-pago"][value="${venta.tipo_pago}"]`);
+  if (radio) radio.checked = true;
+  $('#edit-forma-pago').value = venta.forma_pago || 'efectivo';
+
+  const bloqueado = totalPagado > 0;
+  $all('input[name="edit-tipo-pago"]').forEach(r => r.disabled = bloqueado);
+  $('#edit-pago-bloqueado-nota').classList.toggle('hidden', !bloqueado);
+  updateEditTipoPagoUI();
+
+  $('#edit-add-categoria').value = '';
+  $('#edit-add-articulo').innerHTML = '<option value="">Elige categoría primero</option>';
+  $('#edit-add-articulo').disabled = true;
+  $('#edit-add-evento-fields').classList.add('hidden');
+
+  renderEditCart();
+  $('#edit-venta-panel').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderEditCart() {
+  const tbody = $('#tbody-editar-carrito');
+  if (!state.editCart.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Esta venta no tiene artículos. Agrega al menos uno.</td></tr>';
+    updateEditTotal();
+    return;
+  }
+  tbody.innerHTML = state.editCart.map((it, i) => {
+    const filaPrincipal = `
+      <tr>
+        <td>${escapeHtml(it.nombre)}<br><span class="tag ${it.categoria_tipo === 'servicio' ? 'tag--servicio' : 'tag--producto'}" style="margin-top:4px;">${escapeHtml(it.categoria)}</span></td>
+        <td><input type="number" min="1" step="any" value="${it.cantidad}" data-field="cantidad" data-row="${i}" style="width:72px;"></td>
+        <td><input type="number" min="0" step="0.01" value="${it.precio_unitario}" data-field="precio_unitario" data-row="${i}" style="width:95px;"></td>
+        <td class="num" data-subtotal="${i}">${fmtMoney(it.cantidad * it.precio_unitario)}</td>
+        <td><button type="button" class="btn btn-danger btn-small" data-quitar-linea="${i}">Quitar</button></td>
+      </tr>`;
+    if (it.categoria_tipo !== 'servicio') return filaPrincipal;
+    return filaPrincipal + `
+      <tr class="evento-subrow">
+        <td colspan="5">
+          <div class="row" style="margin-bottom:0;">
+            <div class="field" style="min-width:130px;"><label>Fecha evento</label><input type="date" data-field="fecha_evento" data-row="${i}" value="${it.fecha_evento || ''}"></div>
+            <div class="field" style="min-width:110px;"><label>Hora</label><input type="time" data-field="hora_evento" data-row="${i}" value="${it.hora_evento || ''}"></div>
+            <div class="field" style="min-width:160px;"><label>Lugar</label><input type="text" data-field="lugar_evento" data-row="${i}" value="${escapeHtml(it.lugar_evento || '')}"></div>
+          </div>
+          <div class="field"><label>Notas</label><textarea data-field="notas_evento" data-row="${i}">${escapeHtml(it.notas_evento || '')}</textarea></div>
+        </td>
+      </tr>`;
+  }).join('');
+  updateEditTotal();
+}
+
+function updateEditTotal() {
+  const total = state.editCart.reduce((s, it) => s + it.cantidad * it.precio_unitario, 0);
+  $('#edit-total-num').textContent = fmtMoney(total);
+}
+
+$('#tbody-editar-carrito').addEventListener('input', (e) => {
+  const row = e.target.dataset.row;
+  const field = e.target.dataset.field;
+  if (row === undefined || !field) return;
+  const item = state.editCart[Number(row)];
+  if (!item) return;
+  if (field === 'cantidad' || field === 'precio_unitario') {
+    item[field] = Number(e.target.value) || 0;
+    const cell = $(`[data-subtotal="${row}"]`);
+    if (cell) cell.textContent = fmtMoney(item.cantidad * item.precio_unitario);
+    updateEditTotal();
+  } else {
+    item[field] = e.target.value;
+  }
+});
+
+$('#tbody-editar-carrito').addEventListener('click', async (e) => {
+  const idx = e.target.dataset.quitarLinea;
+  if (idx === undefined) return;
+  const item = state.editCart[Number(idx)];
+  if (!item) return;
+  if (item.detalle_id) {
+    const { data: gastos } = await sb.from('gastos_servicio').select('monto').eq('venta_detalle_id', item.detalle_id);
+    if (gastos && gastos.length) {
+      const totalGastos = gastos.reduce((s, g) => s + Number(g.monto), 0);
+      const ok = confirm('Este artículo tiene ' + gastos.length + ' gasto(s) registrados por ' + fmtMoney(totalGastos) + '. Si lo quitas de la venta, esos gastos también se eliminarán. ¿Deseas continuar?');
+      if (!ok) return;
+    }
+  }
+  state.editCart.splice(Number(idx), 1);
+  renderEditCart();
+});
+
+$('#edit-add-categoria').addEventListener('change', async () => {
+  const catId = $('#edit-add-categoria').value;
+  const sel = $('#edit-add-articulo');
+  if (!catId) { sel.innerHTML = '<option value="">Elige categoría primero</option>'; sel.disabled = true; return; }
+  const { data, error } = await sb.from('v_inventario').select('*').eq('categoria_id', catId).eq('activo', true).gt('cantidad', 0).order('nombre');
+  if (error) { toast('Error al cargar artículos', 'error'); return; }
+  if (!data.length) { sel.innerHTML = '<option value="">Sin existencias en esta categoría</option>'; sel.disabled = true; $('#edit-add-evento-fields').classList.add('hidden'); return; }
+  sel.disabled = false;
+  sel.innerHTML = data.map(a =>
+    `<option value="${a.id}" data-precio="${a.precio_venta}" data-disponible="${a.cantidad}" data-tipo="${a.categoria_tipo}" data-categoria="${escapeHtml(a.categoria)}">${escapeHtml(a.nombre)} — disp: ${a.cantidad} — ${fmtMoney(a.precio_venta)}</option>`
+  ).join('');
+  toggleEditAddEventoFields();
+});
+$('#edit-add-articulo').addEventListener('change', toggleEditAddEventoFields);
+function toggleEditAddEventoFields() {
+  const opt = $('#edit-add-articulo').selectedOptions[0];
+  const esServicio = opt && opt.dataset.tipo === 'servicio';
+  $('#edit-add-evento-fields').classList.toggle('hidden', !esServicio);
+}
+
+$('#btn-editar-agregar-articulo').addEventListener('click', () => {
+  const opt = $('#edit-add-articulo').selectedOptions[0];
+  if (!opt || !opt.value) { toast('Selecciona un artículo', 'error'); return; }
+  const cantidad = Number($('#edit-add-cantidad').value) || 0;
+  if (cantidad <= 0) { toast('La cantidad debe ser mayor a 0', 'error'); return; }
+  const esServicio = opt.dataset.tipo === 'servicio';
+  state.editCart.push({
+    detalle_id: null,
+    articulo_id: opt.value,
+    nombre: opt.textContent.split(' — ')[0],
+    categoria: opt.dataset.categoria || '',
+    categoria_tipo: opt.dataset.tipo,
+    cantidad,
+    precio_unitario: Number(opt.dataset.precio),
+    fecha_evento: esServicio ? ($('#edit-add-fecha-evento').value || '') : '',
+    hora_evento: esServicio ? ($('#edit-add-hora-evento').value || '') : '',
+    lugar_evento: esServicio ? ($('#edit-add-lugar-evento').value || '') : '',
+    notas_evento: esServicio ? ($('#edit-add-notas-evento').value || '') : '',
+  });
+  renderEditCart();
+  $('#edit-add-cantidad').value = 1;
+  $('#edit-add-fecha-evento').value = ''; $('#edit-add-hora-evento').value = '';
+  $('#edit-add-lugar-evento').value = ''; $('#edit-add-notas-evento').value = '';
+});
+
+$all('input[name="edit-tipo-pago"]').forEach(r => r.addEventListener('change', updateEditTipoPagoUI));
+function updateEditTipoPagoUI() {
+  const checked = $('input[name="edit-tipo-pago"]:checked');
+  const credito = checked && checked.value === 'credito';
+  $('#edit-forma-pago-wrap').classList.toggle('hidden', credito);
+  $('#edit-lbl-contado').classList.toggle('checked', !credito);
+  $('#edit-lbl-credito').classList.toggle('checked', credito);
+}
+
+function cancelarEdicionVenta() {
+  state.editingVentaId = null;
+  state.editCart = [];
+  $('#edit-venta-panel').classList.add('hidden');
+}
+$('#btn-cancelar-edicion-venta').addEventListener('click', cancelarEdicionVenta);
+
+$('#btn-guardar-edicion-venta').addEventListener('click', async () => {
+  if (!state.editingVentaId) return;
+  if (!state.editCart.length) { toast('La venta debe tener al menos un artículo', 'error'); return; }
+  const cliente_id = $('#edit-cliente').value;
+  if (!cliente_id) { toast('Selecciona un cliente', 'error'); return; }
+  const fecha = $('#edit-fecha').value;
+  if (!fecha) { toast('Selecciona una fecha', 'error'); return; }
+  const tipoPagoInput = $('input[name="edit-tipo-pago"]:checked');
+  if (!tipoPagoInput) { toast('Selecciona el tipo de pago', 'error'); return; }
+  const tipoPago = tipoPagoInput.value;
+  const formaPago = tipoPago === 'contado' ? $('#edit-forma-pago').value : null;
+
+  const btn = $('#btn-guardar-edicion-venta');
+  btn.disabled = true; btn.textContent = 'Guardando…';
+  try {
+    const items = state.editCart.map(it => ({
+      detalle_id: it.detalle_id,
+      articulo_id: it.articulo_id,
+      cantidad: it.cantidad,
+      precio_unitario: it.precio_unitario,
+      fecha_evento: it.fecha_evento,
+      hora_evento: it.hora_evento,
+      lugar_evento: it.lugar_evento,
+      notas_evento: it.notas_evento,
+    }));
+    const { error } = await sb.rpc('actualizar_venta', {
+      p_venta_id: state.editingVentaId, p_fecha: fecha, p_cliente_id: cliente_id,
+      p_tipo_pago: tipoPago, p_forma_pago: formaPago, p_items: items,
+    });
+    if (error) { toast('No se pudo guardar: ' + error.message, 'error'); return; }
+    toast('Venta actualizada correctamente', 'success');
+    cancelarEdicionVenta();
+    await loadVentasLista();
+  } finally {
+    btn.disabled = false; btn.textContent = 'Guardar cambios';
+  }
+});
+
+/* =====================================================================
    TAB: CALENDARIO DE SERVICIOS
    ===================================================================== */
 const DOW = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -1449,6 +1873,95 @@ $('#form-pago').addEventListener('submit', async (e) => {
   toast('Pago registrado', 'success');
   await loadCreditosPendientes();
 });
+
+/* =====================================================================
+   TAB: ESTADOS DE CUENTA
+   ===================================================================== */
+$('#cuenta-cliente').addEventListener('change', loadEstadoCuenta);
+
+async function loadEstadoCuenta() {
+  const clienteId = $('#cuenta-cliente').value;
+  if (!clienteId) { $('#cuenta-contenido').classList.add('hidden'); return; }
+  const cliente = state.clientes.find(c => c.id === clienteId);
+
+  const [ventasRes, comprasRes, pagosRes] = await Promise.all([
+    sb.from('ventas').select('*').eq('cliente_id', clienteId),
+    sb.from('v_ventas_detalle').select('*').eq('cliente_id', clienteId).order('fecha', { ascending: false }),
+    sb.from('pagos_credito').select('*, ventas(folio)').eq('cliente_id', clienteId).order('fecha_pago', { ascending: false }),
+  ]);
+  if (ventasRes.error || comprasRes.error || pagosRes.error) { toast('Error al cargar el estado de cuenta', 'error'); return; }
+  const ventasCliente = ventasRes.data;
+  const comprasDetalle = comprasRes.data;
+  const pagos = pagosRes.data;
+
+  const totalComprado = ventasCliente.reduce((s, v) => s + Number(v.total), 0);
+  const totalPagadoContado = ventasCliente.filter(v => v.tipo_pago === 'contado').reduce((s, v) => s + Number(v.total), 0);
+  const totalAbonos = pagos.reduce((s, p) => s + Number(p.monto), 0);
+  const totalPagado = totalPagadoContado + totalAbonos;
+  const saldoPendiente = ventasCliente.reduce((s, v) => s + Number(v.saldo_pendiente), 0);
+
+  $('#cuenta-nombre-titulo').textContent = cliente ? cliente.nombre : '';
+  $('#print-meta-cuenta').textContent = 'Estado de cuenta · ' + (cliente ? cliente.nombre : '') + ' · generado ' + fmtDate(todayStr());
+  const partesContacto = [];
+  if (cliente && cliente.telefono) partesContacto.push('Tel: ' + cliente.telefono);
+  if (cliente && cliente.email) partesContacto.push(cliente.email);
+  $('#cuenta-contacto').textContent = partesContacto.join(' · ');
+
+  $('#cuenta-resumen').innerHTML = `
+    <div class="stat-card"><div class="label">Total comprado</div><div class="value">${fmtMoney(totalComprado)}</div></div>
+    <div class="stat-card"><div class="label">Total pagado</div><div class="value">${fmtMoney(totalPagado)}</div></div>
+    <div class="stat-card ${saldoPendiente > 0 ? 'utilidad-neg' : 'utilidad-pos'}"><div class="label">Saldo pendiente</div><div class="value">${fmtMoney(saldoPendiente)}</div></div>
+  `;
+  $('#btn-ir-a-cobrar').classList.toggle('hidden', saldoPendiente <= 0);
+
+  const estatusBadge = (v) => {
+    if (v.tipo_pago === 'contado') return '<span class="badge badge-ok">Completada</span>';
+    if (v.estatus === 'pagada') return '<span class="badge badge-ok">Pagada</span>';
+    return '<span class="badge badge-warn">Pendiente</span>';
+  };
+  const tbodyCompras = $('#tbody-cuenta-compras');
+  if (!comprasDetalle.length) {
+    tbodyCompras.innerHTML = '<tr class="empty-row"><td colspan="9">Este cliente no tiene compras registradas</td></tr>';
+  } else {
+    tbodyCompras.innerHTML = comprasDetalle.map(v => `
+      <tr>
+        <td class="num">#${v.folio}</td>
+        <td>${fmtDate(v.fecha)}</td>
+        <td>${escapeHtml(v.articulo || '—')}</td>
+        <td>${escapeHtml(v.categoria || '—')}</td>
+        <td class="num">${v.cantidad}</td>
+        <td class="num">${fmtMoney(v.precio_unitario)}</td>
+        <td class="num">${fmtMoney(v.subtotal)}</td>
+        <td>${v.tipo_pago === 'credito' ? 'Crédito' : (v.forma_pago === 'banco' ? 'Banco' : 'Efectivo')}</td>
+        <td>${estatusBadge(v)}</td>
+      </tr>`).join('');
+  }
+
+  const tbodyPagos = $('#tbody-cuenta-pagos');
+  if (!pagos.length) {
+    tbodyPagos.innerHTML = '<tr class="empty-row"><td colspan="4">Aún no se han registrado pagos de crédito para este cliente</td></tr>';
+  } else {
+    tbodyPagos.innerHTML = pagos.map(p => `
+      <tr>
+        <td>${fmtDate(p.fecha_pago)}</td>
+        <td class="num">#${p.ventas ? p.ventas.folio : '—'}</td>
+        <td class="num">${fmtMoney(p.monto)}</td>
+        <td>${p.forma_pago === 'banco' ? 'Cuenta bancaria' : 'Efectivo'}</td>
+      </tr>`).join('');
+  }
+
+  $('#cuenta-contenido').classList.remove('hidden');
+}
+
+$('#btn-ir-a-cobrar').addEventListener('click', () => {
+  const clienteId = $('#cuenta-cliente').value;
+  showTab('creditos');
+  populateSelect($('#cred-cliente'), state.clientes, { placeholder: 'Selecciona un cliente' });
+  $('#cred-cliente').value = clienteId;
+  loadCreditosPendientes();
+});
+
+$('#btn-imprimir-cuenta').addEventListener('click', () => window.print());
 
 /* =====================================================================
    TAB: REPORTE DE VENTAS
